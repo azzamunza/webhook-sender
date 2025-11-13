@@ -1,11 +1,12 @@
 const CACHE_NAME = 'webhook-sender-v1';
+const BASE_PATH = '/webhook-sender/';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/app.js',
-  '/manifest.json',
-  '/icon192.png',
-  '/icon512.png'
+  BASE_PATH,
+  `${BASE_PATH}index.html`,
+  `${BASE_PATH}app.js`,
+  `${BASE_PATH}manifest.json`,
+  `${BASE_PATH}icon192.png`,
+  `${BASE_PATH}icon512.png`
 ];
 
 // Install service worker
