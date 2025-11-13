@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2196F3">
+  <title>Webhook Sender</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    .subtitle {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .status {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      display: none;
+      animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      display: block;
+    }
+    
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      display: block;
+    }
+    
+    .status.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+      display: block;
+    }
+    
+    .webhook-list {
+      margin-bottom: 20px;
+    }
+    
+    .webhook-item {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .webhook-label {
+      flex: 1;
+      font-weight: 600;
+      color: #333;
+      font-size: 15px;
+    }
+    
+    .webhook-url {
+      font-size: 11px;
+      color: #999;
+      margin-top: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn:active {
+      transform: scale(0.95);
+    }
+    
+    .btn-primary {
+      background: #2196F3;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #0b7dda;
+    }
+    
+    .btn-success {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background: #45a049;
+    }
+    
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+    
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+    
+    .btn-icon {
+      background: transparent;
+      padding: 8px;
+      font-size: 18px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #2196F3;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+    }
+    
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .button-group .btn {
+      flex: 1;
+    }
+    
+    .install-prompt {
+      background: #fff3cd;
+      color: #856404;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ffeaa7;
+    }
+    
+    .install-prompt strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    #sharedUrl {
+      background: #e3f2fd;
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+      word-break: break-all;
+      font-size: 13px;
+      color: #0d47a1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔗 Webhook Sender</h1>
+      <p class="subtitle">Share URLs to your Make.com scenarios</p>
+    </div>
+    
+    <div id="status" class="status"></div>
+    
+    <div id="installPrompt" class="install-prompt" style="display: none;">
+      <strong>📱 Install this app</strong>
+      Tap the menu (⋮) and select "Add to Home screen" to use this as a share target!
+    </div>
+    
+    <div class="card">
+      <h2 style="margin-bottom: 15px; font-size: 18px;">Your Webhooks</h2>
+      <div id="webhookList" class="webhook-list">
+        <div class="empty-state">
+          <div class="empty-state-icon">📭</div>
+          <p>No webhooks configured yet.<br>Add one below to get started!</p>
+        </div>
+      </div>
+      
+      <button id="addNewBtn" class="btn btn-primary" style="width: 100%;">+ Add Webhook</button>
+    </div>
+    
+    <div id="formCard" class="card" style="display: none;">
+      <h2 style="margin-bottom: 15px; font-size: 18px;" id="formTitle">Add Webhook</h2>
+      
+      <div class="form-group">
+        <label for="webhookLabel">Label</label>
+        <input type="text" id="webhookLabel" placeholder="e.g., Create Job Application">
+      </div>
+      
+      <div class="form-group">
+        <label for="webhookUrl">Webhook URL</label>
+        <input type="url" id="webhookUrl" placeholder="https://hook.us1.make.com/...">
+      </div>
+      
+      <div class="button-group">
+        <button id="saveBtn" class="btn btn-success">Save</button>
+        <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+    
+    <div id="shareCard" class="card" style="display: none;">
+      <h2 style="margin-bottom: 15px; font-size: 18px;">Send to Webhook</h2>
+      <div id="sharedUrl"></div>
+      <div id="shareWebhookList"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(() => {
+        console.log('Service Worker registered');
+      });
+    }
+  </script>
+</body>
+</html>
