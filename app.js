@@ -1,4 +1,4 @@
-let webhooks = [https://hook.eu2.make.com/iybt73nqofwga4aldubr9wcm7aeu7rln];
+let webhooks = [];
 let editingIndex = -1;
 
 // Load webhooks from localStorage
@@ -174,10 +174,20 @@ function handleSharedUrl() {
       `;
     } else {
       shareWebhookList.innerHTML = webhooks.map((webhook, index) => `
-        <button class="btn btn-success" style="width: 100%; margin-bottom: 10px;" onclick="sendToWebhook(${index}, '${escapeHtml(sharedUrl)}', '${escapeHtml(sharedTitle)}')">
+        <button class="btn btn-success share-webhook-btn" style="width: 100%; margin-bottom: 10px;" data-index="${index}" data-url="${escapeHtml(sharedUrl)}" data-title="${escapeHtml(sharedTitle)}">
           Send to ${escapeHtml(webhook.label)}
         </button>
       `).join('');
+      
+      // Add event listeners to share webhook buttons
+      document.querySelectorAll('.share-webhook-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = parseInt(this.dataset.index);
+          const url = this.dataset.url;
+          const title = this.dataset.title;
+          sendToWebhook(index, url, title);
+        });
+      });
     }
     
     shareCard.style.display = 'block';
