@@ -2,7 +2,7 @@
   "name": "Webhook Sender",
   "short_name": "Webhooks",
   "description": "Send URLs to your Make.com webhooks",
-  "start_url": "/",
+  "start_url": "/webhook-sender/",
   "display": "standalone",
   "background_color": "#2196F3",
   "theme_color": "#2196F3",
@@ -22,7 +22,7 @@
     }
   ],
   "share_target": {
-    "action": "/",
+    "action": "/webhook-sender/",
     "method": "GET",
     "params": {
       "title": "title",

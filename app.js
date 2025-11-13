@@ -138,11 +138,9 @@ async function sendToWebhook(index, sharedUrl, sharedTitle) {
     if (response.ok) {
       showStatus(`✅ Sent to "${webhook.label}"`, 'success');
       
-      // Clear share parameters and reload current page after success
+      // Clear share parameters and redirect to base path
       setTimeout(() => {
-        const url = new URL(window.location.href);
-        url.search = '';
-        window.location.href = url.toString();
+        window.location.href = document.querySelector('base')?.href || '/';
       }, 2000);
     } else {
       const errorText = await response.text().catch(() => 'Unknown error');
