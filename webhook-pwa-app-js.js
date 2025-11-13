@@ -1,4 +1,4 @@
-let webhooks = [];
+let webhooks = [https://hook.eu2.make.com/iybt73nqofwga4aldubr9wcm7aeu7rln];
 let editingIndex = -1;
 
 // Load webhooks from localStorage
@@ -128,16 +128,11 @@ async function sendToWebhook(index, sharedUrl, sharedTitle) {
   try {
     showStatus(`Sending to "${webhook.label}"...`, 'info');
     
-    const response = await fetch(webhook.url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        url: sharedUrl,
-        title: sharedTitle,
-        timestamp: new Date().toISOString()
-      })
+    // Make.com webhooks work best with query parameters
+    const queryUrl = `${webhook.url}?job_link=${encodeURIComponent(sharedUrl)}`;
+    
+    const response = await fetch(queryUrl, {
+      method: 'GET'
     });
     
     if (response.ok) {
@@ -148,9 +143,12 @@ async function sendToWebhook(index, sharedUrl, sharedTitle) {
         window.location.href = '/';
       }, 2000);
     } else {
+      const errorText = await response.text().catch(() => 'Unknown error');
+      console.error('Webhook failed:', response.status, errorText);
       showStatus(`❌ Failed to send to "${webhook.label}"`, 'error');
     }
   } catch (error) {
+    console.error('Fetch error:', error);
     showStatus(`❌ Error: ${error.message}`, 'error');
   }
 }
